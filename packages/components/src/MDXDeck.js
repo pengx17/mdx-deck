@@ -103,7 +103,7 @@ export class MDXDeck extends React.Component {
 
   getIndex = () => {
     const { pathname } = globalHistory.location
-    return Number(pathname.split('/')[1] || 0)
+    return Number(pathname.split(this.basepath)[1] || 0)
   }
 
   getMeta = i => {
@@ -115,7 +115,7 @@ export class MDXDeck extends React.Component {
   goto = i => {
     const current = this.getIndex()
     const reverse = i < current
-    navigate('/' + i)
+    navigate(i)
     const meta = this.getMeta(i)
     this.setState({
       step: reverse ? meta.steps || 0 : 0,
@@ -210,6 +210,15 @@ export class MDXDeck extends React.Component {
     console.error(err)
   }
 
+  get basepath() {
+    return (
+      (document &&
+        document.querySelector('base') &&
+        document.querySelector('base').attributes.href.value) ||
+      '/'
+    )
+  }
+
   render() {
     const { pathname } = globalHistory.location
     const { slides } = this.state
@@ -236,13 +245,19 @@ export class MDXDeck extends React.Component {
         break
     }
 
+    const routerOption = {}
+
+    if (this.basepath) {
+      routerOption.basepath = this.basepath
+    }
+
     return (
       <Provider {...this.props} {...this.state} mode={mode} index={index}>
         <Catch>
           <GoogleFonts />
           <Wrapper {...this.state} modes={modes} index={index}>
             <Swipeable onSwipedRight={this.previous} onSwipedLeft={this.next}>
-              <Router>
+              <Router {...routerOption}>
                 <Slide path="/" index={0} {...context}>
                   <FirstSlide path="/" />
                 </Slide>

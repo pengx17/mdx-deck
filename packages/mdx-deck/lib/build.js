@@ -53,10 +53,11 @@ const build = async (opts = {}) => {
   const config = createConfig(opts)
 
   config.mode = 'production'
+
   config.output = {
-    // Allow user to override this in his custom webpack config
-    ...config.output,
     path: opts.outDir,
+    filename: '[name].[contenthash:8].js',
+    ...config.output,
   }
 
   if (opts.html) {
@@ -70,6 +71,14 @@ const build = async (opts = {}) => {
       new HTMLPlugin({
         filename: '404.html',
         context: { head },
+      })
+    )
+  }
+
+  if (config.output.publicPath) {
+    config.plugins.push(
+      new HTMLPlugin({
+        context: { head: `<base href="${config.output.publicPath}">` },
       })
     )
   }

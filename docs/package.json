@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "mdx-deck demo.mdx",
-    "build": "mdx-deck build demo.mdx",
+    "build": "mdx-deck build --webpack ./webpack.config.github.js --no-html demo.mdx",
     "now-build": "yarn build"
   },
   "dependencies": {
@@ -19,5 +19,6 @@
     "@rebass/emotion": "^3.0.0",
     "mdx-deck": "^2.0.5",
     "rebass": "^3.0.1"
-  }
+  },
+  "base": "/mdx-deck/"
 }
